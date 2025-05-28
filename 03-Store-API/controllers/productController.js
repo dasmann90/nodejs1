@@ -64,7 +64,7 @@ const getAllProduct = async (req, res) => {
 
 
   const products = await result;
-  res.status(200).json({ products, total: products.length });
+  res.status(200).json( {products,count:products.length});
 };
 
 module.exports = { getAllProduct, getAllProductStatic };

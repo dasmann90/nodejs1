@@ -5,6 +5,7 @@ const app = express();
 const connectDB = require("./db/connect");
 const notFoundTempalte = require("./middlerware/notFound");
 const errorHandlerMiddleWare = require("./middlerware/errorHandler");
+const accessControl = require('./middlerware/accessControl');
 
 const productRoute = require("./routes/productRoute");
 // config variables
@@ -12,6 +13,8 @@ const port = process.env.PORT || 3000;
 
 // config middleware
 app.use(express.json());
+app.use(accessControl)
+
 
 // routes
 
