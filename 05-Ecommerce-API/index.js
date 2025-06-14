@@ -5,12 +5,14 @@ const connectDB = require("./db");
 const port = process.env.PORT || 3200;
 const userRoute = require("./routes/user");
 const authRoute = require("./routes/auth");
+const productRoute = require("./routes/product")
 
 //middleware
 app.use(express.json());
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/product", productRoute);
 
 const start = async () => {
   try {
