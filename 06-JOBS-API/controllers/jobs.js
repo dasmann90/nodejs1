@@ -1,5 +1,10 @@
+const Job = require("../models/Jobs");
+const { StatusCodes } = require("http-status-codes");
+const { NotFoundError, BadRequestError } = require("../errors");
+
 const getAllJobs = async (req, res) => {
-  res.send(req.user);
+  const jobs = await Job.find({ createdBy: req.user.userId }).sort("createdAt");
+  res.status(StatusCodes.OK).json({ jobs, count: jobs.length });
 };
 
 const getJob = async (req, res) => {
@@ -7,7 +12,9 @@ const getJob = async (req, res) => {
 };
 
 const createJob = async (req, res) => {
-  res.send("create job API");
+  req.body.createdBy = req.user.userId;
+  const job = await Job.create(req.body);
+  res.status(StatusCodes.CREATED).json(job);
 };
 const updateJob = async (req, res) => {
   res.send("update job API");
@@ -16,10 +23,16 @@ const deleteJob = async (req, res) => {
   res.send("delete job API");
 };
 
+const deleteAllJobs = async (req, res) => {
+  await Job.remove({});
+  res.send("delelte all");
+};
+
 module.exports = {
   getAllJobs,
   getJob,
   createJob,
   updateJob,
   deleteJob,
+  deleteAllJobs,
 };
