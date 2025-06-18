@@ -1,21 +1,24 @@
 const jwt = require("jsonwebtoken");
-const {UnauthorizedAPIError} = require("../errors");
+const { UnauthenticatedError } = require("../errors/");
 
-const authMiddleWare = async (req, res, next) => {
+const auth = async (req, res, next) => {
+  //check headers
   const authHeader = req.headers.authorization;
-
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new UnauthorizedAPIError(`No token provided`);
+    throw new UnauthenticatedError("Authentication invalid");
   }
+
+  // collect the token
   const token = authHeader.split(" ")[1];
+  //console.log(token);
+
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
-    const { id, username } = decode;
-    req.user = { id, username };
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { userId: payload.userId, username: payload.username };
     next();
   } catch (error) {
-    throw new UnauthorizedAPIError(`Not authorize to access this route`);
+    throw new UnauthenticatedError("Authentication invalid");
   }
 };
 
-module.exports = authMiddleWare;
+module.exports = auth;
